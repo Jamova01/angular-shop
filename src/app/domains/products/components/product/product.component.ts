@@ -13,10 +13,6 @@ export class ProductComponent {
   @Output() addToCart = new EventEmitter();
 
   addToCartHandler() {
-    console.log('Click from child');
-    this.addToCart.emit(
-      'Hola este es un message desde el hijo ' + this.product.title
-    );
+    this.addToCart.emit(this.product);
   }
-  // img = 'https://picsum.photos/640/640?r=2r=' + Math.random();
 }
