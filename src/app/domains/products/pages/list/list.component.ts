@@ -1,62 +1,36 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProductComponent } from '../../components/product/product.component';
-import { Product } from '../../../shared/models/product.model';
-import { HeaderComponent } from '../../../shared/components/header/header.component';
+
+import { HeaderComponent } from '@shared/components/header/header.component';
+import { ProductComponent } from '@products/components/product/product.component';
+
+import { Product } from '@shared/models/product.model';
+
+import { CartService } from '@shared/services/cart.service';
+import { ProductService } from '@shared/services/product.service';
 
 @Component({
   selector: 'app-list',
+  standalone: true,
   imports: [CommonModule, ProductComponent, HeaderComponent],
   templateUrl: './list.component.html',
   styleUrl: './list.component.css',
 })
 export class ListComponent {
   products = signal<Product[]>([]);
-  cart = signal<Product[]>([]);
+  private cartService = inject(CartService);
+  private productService = inject(ProductService);
 
-  constructor() {
-    const initProducts: Product[] = [
-      {
-        id: 1,
-        title: 'Product 1',
-        price: 1000,
-        image: 'https://picsum.photos/640/640?r=23',
+  ngOnInit() {
+    this.productService.getProducts().subscribe({
+      next: (products) => {
+        this.products.set(products);
       },
-      {
-        id: 2,
-        title: 'Product 2',
-        price: 1000,
-        image: 'https://picsum.photos/640/640?r=23',
-      },
-      {
-        id: 3,
-        title: 'Product 3',
-        price: 1000,
-        image: 'https://picsum.photos/640/640?r=23',
-      },
-      {
-        id: 4,
-        title: 'Product 4',
-        price: 1000,
-        image: 'https://picsum.photos/640/640?r=23',
-      },
-      {
-        id: 5,
-        title: 'Product 5',
-        price: 1000,
-        image: 'https://picsum.photos/640/640?r=23',
-      },
-      {
-        id: 6,
-        title: 'Product 6',
-        price: 1000,
-        image: 'https://picsum.photos/640/640?r=23',
-      },
-    ];
-    this.products.set(initProducts);
+      error: () => {},
+    });
   }
 
-  addToCart(product: Product) {
-    this.cart.update((prevState) => [...prevState, product]);
+  addToCart(product: Product): void {
+    this.cartService.addToCart(product);
   }
 }

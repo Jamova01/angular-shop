@@ -33,7 +33,7 @@
         <div
           class="absolute -top-2 -left-2 rounded h-5 w-5 bg-black text-white text-xs"
         >
-          {{ cart.length }}
+          {{ cart().length }}
         </div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -78,13 +78,13 @@
     </button>
   </div>
   <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-    @for (product of cart; track $index) {
+    @for (product of cart(); track $index) {
     <li class="py-3 sm:py-4">
       <div class="flex items-center">
         <div class="shrink-0">
           <img
             class="w-8 h-8 rounded-full"
-            [src]="product.image"
+            [src]="product.images[0]"
             alt="Neil image"
           />
         </div>
@@ -105,4 +105,7 @@
     </li>
     }
   </ul>
+  <div>
+    <p>Total: {{ total() }}</p>
+  </div>
 </div>
